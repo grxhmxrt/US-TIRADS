@@ -190,7 +190,7 @@
                 <td><input type="text" id="recommendations" value="" readonly></td>
             </tr>
         </table>
-        <div class="copyright">&copy; 2025 TI-RADS Calculator</div>
+        <div class="copyright">&copy; 2025 Graham Martin</div>
     </div>
     <script>
         function resetValues() {
@@ -202,7 +202,6 @@
             document.getElementById("tiRadsScore").value = "";
             document.getElementById("recommendations").value = "";
         }
-
         function calculateScore() {
             const fields = [
                 { id: "composition", label: "Composition" },
@@ -211,17 +210,14 @@
                 { id: "margin", label: "Margin" },
                 { id: "echogenicFoci", label: "Echogenic Foci" }
             ];
-
             let totalScore = 0;
             let report = "TI-RADS Score Report\n\n";
-
             fields.forEach(field => {
                 const value = parseInt(document.getElementById(field.id).value);
                 const selectedText = document.getElementById(field.id).options[document.getElementById(field.id).selectedIndex].text;
                 totalScore += value;
                 report += `${field.label}: ${selectedText}\n`;
             });
-
             let tiRadsLevel = "";
             let recommendations = "";
             if (totalScore <= 1) {
@@ -240,12 +236,9 @@
                 tiRadsLevel = "TR5";
                 recommendations = "Highly suspicious, FNA if ≥1 cm, follow-up if ≥0.5 cm";
             }
-
             document.getElementById("tiRadsScore").value = `${totalScore} (${tiRadsLevel})`;
             document.getElementById("recommendations").value = recommendations;
-
             report += `\nTotal TI-RADS Score: ${totalScore}\nTI-RADS Level: ${tiRadsLevel}\nRecommendations: ${recommendations}`;
-
             navigator.clipboard.writeText(report).then(() => {
                 alert(`TI-RADS Score: ${totalScore}\nLevel: ${tiRadsLevel}\nRecommendations: ${recommendations}\n\nReport copied to clipboard!`);
             }).catch(err => {
