@@ -248,12 +248,7 @@
             document.getElementById("recommendations").value = recommendations;
             document.getElementById("tiRadsScore").style.backgroundColor = scoreColor;
             document.getElementById("recommendations").style.backgroundColor = scoreColor;
-            report += `\nTotal TI-RADS Score: ${totalScore}\nTI-RADS Level: ${tiRadsLevel}\nRecommendations: ${recommendations}`;
-            navigator.clipboard.writeText(report).then(() => {
-                alert(`TI-RADS Score: ${totalScore}\nLevel: ${tiRadsLevel}\nRecommendations: ${recommendations}\n\nReport copied to clipboard!`);
-            }).catch(err => {
-                alert("Failed to copy report: " + err);
-            });
+            alert(`TI-RADS Score: ${totalScore}\nLevel: ${tiRadsLevel}\nRecommendations: ${recommendations}`);
         }
     </script>
 </body>
