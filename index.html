@@ -122,6 +122,7 @@
         <div class="button-container">
             <button onclick="resetValues()">Reset Values</button>
             <button onclick="calculateScore()">Calculate Score</button>
+            <button onclick="copyReport()">Copy Report</button>
         </div>
         <table>
             <tr>
@@ -249,6 +250,47 @@
             document.getElementById("tiRadsScore").style.backgroundColor = scoreColor;
             document.getElementById("recommendations").style.backgroundColor = scoreColor;
             alert(`TI-RADS Score: ${totalScore}\nLevel: ${tiRadsLevel}\nRecommendations: ${recommendations}`);
+        }
+        function copyReport() {
+            const fields = [
+                { id: "composition", label: "Composition" },
+                { id: "echogenicity", label: "Echogenicity" },
+                { id: "shape", label: "Shape" },
+                { id: "margin", label: "Margin" },
+                { id: "echogenicFoci", label: "Echogenic Foci" }
+            ];
+            let totalScore = 0;
+            let report = "TI-RADS Score Report\n\n";
+            fields.forEach(field => {
+                const value = parseInt(document.getElementById(field.id).value);
+                const selectedText = document.getElementById(field.id).options[document.getElementById(field.id).selectedIndex].text;
+                totalScore += value;
+                report += `${field.label}: ${selectedText}\n`;
+            });
+            let tiRadsLevel = "";
+            let recommendations = "";
+            if (totalScore <= 1) {
+                tiRadsLevel = "TR1";
+                recommendations = "Benign, no FNA required";
+            } else if (totalScore === 2) {
+                tiRadsLevel = "TR2";
+                recommendations = "Not suspicious, no FNA required";
+            } else if (totalScore === 3) {
+                tiRadsLevel = "TR3";
+                recommendations = "Mildly suspicious, FNA if ≥2.5 cm, follow-up if ≥1.5 cm";
+            } else if (totalScore >= 4 && totalScore <= 6) {
+                tiRadsLevel = "TR4";
+                recommendations = "Moderately suspicious, FNA if ≥1.5 cm, follow-up if ≥1 cm";
+            } else if (totalScore >= 7) {
+                tiRadsLevel = "TR5";
+                recommendations = "Highly suspicious, FNA if ≥1 cm, follow-up if ≥0.5 cm";
+            }
+            report += `\nTotal TI-RADS Score: ${totalScore}\nTI-RADS Level: ${tiRadsLevel}\nRecommendations: ${recommendations}`;
+            navigator.clipboard.writeText(report).then(() => {
+                alert(`Report copied to clipboard!\n\n${report}`);
+            }).catch(err => {
+                alert(`Failed to copy report: ${err}`);
+            });
         }
     </script>
 </body>
