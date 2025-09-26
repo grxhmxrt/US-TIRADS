@@ -227,23 +227,23 @@
             if (totalScore <= 1) {
                 tiRadsLevel = "TR1";
                 recommendations = "Benign, no FNA required";
-                scoreColor = "#D4EFCC"; // Soft green for TR1 (Benign)
+                scoreColor = "#E0F2E9"; // Light green for TR1 (Benign)
             } else if (totalScore === 2) {
                 tiRadsLevel = "TR2";
                 recommendations = "Not suspicious, no FNA required";
-                scoreColor = "#A9D8A3"; // Slightly darker green for TR2 (Not suspicious)
+                scoreColor = "#FFF7CC"; // Light yellow for TR2 (Not suspicious)
             } else if (totalScore === 3) {
                 tiRadsLevel = "TR3";
                 recommendations = "Mildly suspicious, FNA if ≥2.5 cm, follow-up if ≥1.5 cm";
-                scoreColor = "#FFE8A3"; // Muted yellow for TR3 (Mildly suspicious)
+                scoreColor = "#FFE066"; // Darker yellow for TR3 (Mildly suspicious)
             } else if (totalScore >= 4 && totalScore <= 6) {
                 tiRadsLevel = "TR4";
                 recommendations = "Moderately suspicious, FNA if ≥1.5 cm, follow-up if ≥1 cm";
-                scoreColor = "#F8C7A1"; // Subtle orange for TR4 (Moderately suspicious)
+                scoreColor = "#FFCC99"; // Orange for TR4 (Moderately suspicious)
             } else if (totalScore >= 7) {
                 tiRadsLevel = "TR5";
                 recommendations = "Highly suspicious, FNA if ≥1 cm, follow-up if ≥0.5 cm";
-                scoreColor = "#F5A3A3"; // Restrained red for TR5 (Highly suspicious)
+                scoreColor = "#FF9999"; // Red for TR5 (Highly suspicious)
             }
             document.getElementById("tiRadsScore").value = `${totalScore} (${tiRadsLevel})`;
             document.getElementById("recommendations").value = recommendations;
