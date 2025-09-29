@@ -130,9 +130,21 @@
                 <th>Details</th>
             </tr>
             <tr>
+                <td>Location</td>
+                <td>
+                    <select id="location">
+                        <option value="">Select...</option>
+                        <option value="Right">Right</option>
+                        <option value="Isthmus">Isthmus</option>
+                        <option value="Left">Left</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td>Composition</td>
                 <td>
                     <select id="composition">
+                        <option value="">Select...</option>
                         <option value="0">Cystic or almost completely cystic (0)</option>
                         <option value="0">Spongiform (0)</option>
                         <option value="1">Mixed cystic and solid (1)</option>
@@ -144,6 +156,7 @@
                 <td>Echogenicity</td>
                 <td>
                     <select id="echogenicity">
+                        <option value="">Select...</option>
                         <option value="0">Anechoic (0)</option>
                         <option value="1">Hyperechoic or isoechoic (1)</option>
                         <option value="2">Hypoechoic (2)</option>
@@ -155,6 +168,7 @@
                 <td>Shape</td>
                 <td>
                     <select id="shape">
+                        <option value="">Select...</option>
                         <option value="0">Wider-than-tall (0)</option>
                         <option value="3">Taller-than-wide (3)</option>
                     </select>
@@ -164,6 +178,7 @@
                 <td>Margin</td>
                 <td>
                     <select id="margin">
+                        <option value="">Select...</option>
                         <option value="0">Smooth (0)</option>
                         <option value="0">Ill-defined (0)</option>
                         <option value="2">Lobulated or irregular (2)</option>
@@ -175,6 +190,7 @@
                 <td>Echogenic Foci</td>
                 <td>
                     <select id="echogenicFoci">
+                        <option value="">Select...</option>
                         <option value="0">None or large comet-tail artifacts (0)</option>
                         <option value="1">Macrocalcifications (1)</option>
                         <option value="2">Peripheral calcifications (2)</option>
@@ -195,11 +211,12 @@
     </div>
     <script>
         function resetValues() {
-            document.getElementById("composition").value = "0";
-            document.getElementById("echogenicity").value = "0";
-            document.getElementById("shape").value = "0";
-            document.getElementById("margin").value = "0";
-            document.getElementById("echogenicFoci").value = "0";
+            document.getElementById("location").value = "";
+            document.getElementById("composition").value = "";
+            document.getElementById("echogenicity").value = "";
+            document.getElementById("shape").value = "";
+            document.getElementById("margin").value = "";
+            document.getElementById("echogenicFoci").value = "";
             document.getElementById("tiRadsScore").value = "";
             document.getElementById("recommendations").value = "";
             document.getElementById("tiRadsScore").style.backgroundColor = "#f8f9fa";
@@ -207,6 +224,7 @@
         }
         function calculateScore() {
             const fields = [
+                { id: "location", label: "Location" },
                 { id: "composition", label: "Composition" },
                 { id: "echogenicity", label: "Echogenicity" },
                 { id: "shape", label: "Shape" },
@@ -216,9 +234,12 @@
             let totalScore = 0;
             let report = "TI-RADS Score Report\n\n";
             fields.forEach(field => {
-                const value = parseInt(document.getElementById(field.id).value);
-                const selectedText = document.getElementById(field.id).options[document.getElementById(field.id).selectedIndex].text;
-                totalScore += value;
+                const selectElement = document.getElementById(field.id);
+                const value = field.id === "location" ? selectElement.value : parseInt(selectElement.value) || 0;
+                const selectedText = selectElement.value ? selectElement.options[selectElement.selectedIndex].text : "Not specified";
+                if (field.id !== "location") {
+                    totalScore += value;
+                }
                 report += `${field.label}: ${selectedText}\n`;
             });
             let tiRadsLevel = "";
@@ -251,6 +272,8 @@
             document.getElementById("recommendations").style.backgroundColor = scoreColor;
         }
         function copyReport() {
+            const locationElement = document.getElementById("location");
+            const location = locationElement.value ? locationElement.options[locationElement.selectedIndex].text : "Not specified";
             const fields = [
                 { id: "composition", label: "Composition" },
                 { id: "echogenicity", label: "Echogenicity" },
@@ -259,12 +282,10 @@
                 { id: "echogenicFoci", label: "Echogenic Foci" }
             ];
             let totalScore = 0;
-            let report = "TI-RADS Score Report\n\n";
             fields.forEach(field => {
-                const value = parseInt(document.getElementById(field.id).value);
-                const selectedText = document.getElementById(field.id).options[document.getElementById(field.id).selectedIndex].text;
+                const selectElement = document.getElementById(field.id);
+                const value = parseInt(selectElement.value) || 0;
                 totalScore += value;
-                report += `${field.label}: ${selectedText}\n`;
             });
             let tiRadsLevel = "";
             let recommendations = "";
@@ -284,12 +305,43 @@
                 tiRadsLevel = "TR5";
                 recommendations = "Highly suspicious, FNA if ≥1 cm, follow-up if ≥0.5 cm";
             }
-            report += `\nTotal TI-RADS Score: ${totalScore}\nTI-RADS Level: ${tiRadsLevel}\nRecommendations: ${recommendations}`;
-            navigator.clipboard.writeText(report).then(() => {
-                alert(`Report copied to clipboard!\n\n${report}`);
-            }).catch(err => {
-                alert(`Failed to copy report: ${err}`);
-            });
+            const report = `TI-RADS Score Report\n\nLocation: ${location}\nTotal TI-RADS Score: ${totalScore} (${tiRadsLevel})\nRecommendations: ${recommendations}`;
+            
+            // Try using the modern clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(report).then(() => {
+                    alert(`Report copied to clipboard!\n\n${report}`);
+                }).catch(err => {
+                    console.error('Clipboard API failed:', err);
+                    fallbackCopyReport(report);
+                });
+            } else {
+                // Fallback for non-secure contexts or older browsers
+                fallbackCopyReport(report);
+            }
+        }
+        function fallbackCopyReport(text) {
+            // Create a temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed'; // Prevent scrolling to bottom
+            textarea.style.opacity = '0'; // Make it invisible
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert(`Report copied to clipboard!\n\n${text}`);
+                } else {
+                    alert('Failed to copy report. Please copy the text manually:\n\n' + text);
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('Failed to copy report. Please copy the text manually:\n\n' + text);
+            } finally {
+                document.body.removeChild(textarea);
+            }
         }
     </script>
 </body>
