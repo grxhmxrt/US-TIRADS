@@ -21,7 +21,7 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
-            max-width: 720px;
+            max-width: 740px;
             width: 100%;
         }
         h1 {
@@ -35,8 +35,6 @@
             color: #34495e;
             margin-bottom: 20px;
         }
-
-        /* Tabs */
         .tabs {
             display: flex;
             justify-content: center;
@@ -64,7 +62,6 @@
             color: white;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -83,7 +80,6 @@
         tr:nth-child(even) {
             background-color: #f8f9fa;
         }
-
         .button-container {
             display: flex;
             justify-content: center;
@@ -105,7 +101,6 @@
             background-color: #2980b9;
             transform: translateY(-2px);
         }
-
         select, input[type="text"] {
             width: 100%;
             padding: 8px;
@@ -124,15 +119,12 @@
             background-color: #f8f9fa;
             cursor: not-allowed;
         }
-
         .content-section {
             display: none;
         }
         .content-section.active {
             display: block;
         }
-
-        /* Management Tab */
         .management-container {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             border: 1px solid #e0e0e0;
@@ -186,11 +178,10 @@
     </style>
 </head>
 <body onload="resetValues(); showTab(0);">
-
     <div class="container">
         <h1>TI-RADS Calculator</h1>
         <p>Calculates TI-RADS Score based on 2017 ACR White Paper</p>
-
+        
         <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" onclick="showTab(0)">Calculator</button>
@@ -218,8 +209,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Size</td>
-                    <td><input type="text" id="size" placeholder="Enter size (e.g., 2.5 cm)"></td>
+                    <td>Size (cm)</td>
+                    <td><input type="text" id="size" placeholder="Enter size in cm (e.g., 2.5)"></td>
                 </tr>
                 <tr>
                     <td>Composition</td>
@@ -287,6 +278,10 @@
                     <td>Recommendations</td>
                     <td><input type="text" id="recommendations" value="" readonly></td>
                 </tr>
+                <tr>
+                    <td>Follow-up</td>
+                    <td><input type="text" id="followup" value="" readonly></td>
+                </tr>
             </table>
         </div>
 
@@ -295,7 +290,6 @@
             <div class="management-container">
                 <h2 style="text-align:center; color:#2c3e50; margin-bottom:10px;">TI-RADS Management Guidelines</h2>
                 <p style="text-align:center; color:#555; margin-bottom:25px;">2017 ACR White Paper – FNA and Follow-up Recommendations</p>
-
                 <div class="tirads-card" style="border:3px solid #E0F2E9;">
                     <div class="tirads-header" style="background:linear-gradient(90deg,#4ade80,#22c55e);">
                         TR1 — Benign <span class="score-range">(0 points)</span>
@@ -305,7 +299,6 @@
                         No follow-up required.
                     </div>
                 </div>
-
                 <div class="tirads-card" style="border:3px solid #FFF7CC;">
                     <div class="tirads-header" style="background:linear-gradient(90deg,#fde047,#facc15);">
                         TR2 — Not suspicious <span class="score-range">(2 points)</span>
@@ -315,43 +308,38 @@
                         No follow-up required.
                     </div>
                 </div>
-
                 <div class="tirads-card" style="border:3px solid #FFE066;">
                     <div class="tirads-header" style="background:linear-gradient(90deg,#fcd34d,#f59e0b);">
                         TR3 — Mildly suspicious <span class="score-range">(3 points)</span>
                     </div>
                     <div class="tirads-body">
-                        <strong>FNA if:</strong> nodule ≥ 2.5 cm<br>
-                        <strong>Follow-up if:</strong> nodule ≥ 1.5 cm
+                        <strong>FNA if:</strong> ≥ 2.5 cm<br>
+                        <strong>Follow-up if:</strong> ≥ 1.5 cm (at 1, 3, and 5 years)
                     </div>
                 </div>
-
                 <div class="tirads-card" style="border:3px solid #FFCC99;">
                     <div class="tirads-header" style="background:linear-gradient(90deg,#fb923c,#f97316);">
                         TR4 — Moderately suspicious <span class="score-range">(4–6 points)</span>
                     </div>
                     <div class="tirads-body">
-                        <strong>FNA if:</strong> nodule ≥ 1.5 cm<br>
-                        <strong>Follow-up if:</strong> nodule ≥ 1.0 cm
+                        <strong>FNA if:</strong> ≥ 1.5 cm<br>
+                        <strong>Follow-up if:</strong> ≥ 1.0 cm (at 1, 2, 3, and 5 years)
                     </div>
                 </div>
-
                 <div class="tirads-card" style="border:3px solid #FF9999;">
                     <div class="tirads-header" style="background:linear-gradient(90deg,#f87171,#ef4444);">
                         TR5 — Highly suspicious <span class="score-range">(≥7 points)</span>
                     </div>
                     <div class="tirads-body">
-                        <strong>FNA if:</strong> nodule ≥ 1.0 cm<br>
-                        <strong>Follow-up if:</strong> nodule ≥ 0.5 cm
+                        <strong>FNA if:</strong> ≥ 1.0 cm<br>
+                        <strong>Follow-up if:</strong> ≥ 0.5 cm (annually for up to 5 years)
                     </div>
                 </div>
-
                 <p class="note">
-                    Always integrate with clinical context and patient-specific factors.
+                    Always integrate with clinical context and patient-specific factors. Based on ACR TI-RADS 2017.
                 </p>
             </div>
         </div>
-
         <div class="copyright">&copy; 2026 Graham Martin</div>
     </div>
 
@@ -365,12 +353,13 @@
         }
 
         function resetValues() {
-            ["location","size","composition","echogenicity","shape","margin","echogenicFoci","tiRadsScore","recommendations"].forEach(id => {
+            ["location","size","composition","echogenicity","shape","margin","echogenicFoci","tiRadsScore","recommendations","followup"].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.value = "";
             });
             document.getElementById("tiRadsScore").style.backgroundColor = "#f8f9fa";
             document.getElementById("recommendations").style.backgroundColor = "#f8f9fa";
+            document.getElementById("followup").style.backgroundColor = "#f8f9fa";
         }
 
         function calculateScore() {
@@ -379,30 +368,63 @@
                 totalScore += parseInt(document.getElementById(id).value) || 0;
             });
 
-            let level = "", rec = "", color = "";
-            if (totalScore <= 1)      { level = "TR1"; rec = "Benign, no FNA required"; color = "#E0F2E9"; }
-            else if (totalScore === 2){ level = "TR2"; rec = "Not suspicious, no FNA required"; color = "#FFF7CC"; }
-            else if (totalScore === 3){ level = "TR3"; rec = "Mildly suspicious, FNA if ≥2.5 cm, follow-up if ≥1.5 cm"; color = "#FFE066"; }
-            else if (totalScore <= 6) { level = "TR4"; rec = "Moderately suspicious, FNA if ≥1.5 cm, follow-up if ≥1 cm"; color = "#FFCC99"; }
-            else                      { level = "TR5"; rec = "Highly suspicious, FNA if ≥1 cm, follow-up if ≥0.5 cm"; color = "#FF9999"; }
+            let level = "", rec = "", followup = "", color = "";
+
+            if (totalScore <= 1) { 
+                level = "TR1"; 
+                rec = "Benign, no FNA required"; 
+                followup = "No follow-up required"; 
+                color = "#E0F2E9"; 
+            }
+            else if (totalScore === 2){ 
+                level = "TR2"; 
+                rec = "Not suspicious, no FNA required"; 
+                followup = "No follow-up required"; 
+                color = "#FFF7CC"; 
+            }
+            else if (totalScore === 3){ 
+                level = "TR3"; 
+                rec = "Mildly suspicious, FNA if ≥2.5 cm"; 
+                followup = "Follow-up US at 1, 3, and 5 years if ≥1.5 cm"; 
+                color = "#FFE066"; 
+            }
+            else if (totalScore <= 6) { 
+                level = "TR4"; 
+                rec = "Moderately suspicious, FNA if ≥1.5 cm"; 
+                followup = "Follow-up US at 1, 2, 3, and 5 years if ≥1.0 cm"; 
+                color = "#FFCC99"; 
+            }
+            else { 
+                level = "TR5"; 
+                rec = "Highly suspicious, FNA if ≥1.0 cm"; 
+                followup = "Annual follow-up US for up to 5 years if ≥0.5 cm"; 
+                color = "#FF9999"; 
+            }
 
             document.getElementById("tiRadsScore").value = `${totalScore} (${level})`;
             document.getElementById("recommendations").value = rec;
+            document.getElementById("followup").value = followup;
+
             document.getElementById("tiRadsScore").style.backgroundColor = color;
             document.getElementById("recommendations").style.backgroundColor = color;
+            document.getElementById("followup").style.backgroundColor = color;
         }
 
         function copyReport() {
-            const location = document.getElementById("location").value ? 
+            const location = document.getElementById("location").value ?
                 document.getElementById("location").options[document.getElementById("location").selectedIndex].text : "Not specified";
-            
+           
             const size = document.getElementById("size").value || "Not specified";
             const scoreText = document.getElementById("tiRadsScore").value || "Not calculated";
+            const recText = document.getElementById("recommendations").value || "";
+            const fuText = document.getElementById("followup").value || "";
 
             const report = `TI-RADS Score Report\n\n` +
                            `Location: ${location}\n` +
-                           `Size: ${size}\n` +
-                           `Total TI-RADS Score: ${scoreText}`;
+                           `Size: ${size} cm\n` +
+                           `Total TI-RADS Score: ${scoreText}\n` +
+                           `Recommendations: ${recText}\n` +
+                           `Follow-up: ${fuText}`;
 
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(report).then(() => {
