@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,47 +9,55 @@
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             background: linear-gradient(135deg, #e6f0fa 0%, #f7f9fc 100%);
             display: flex;
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            box-sizing: border-box;
         }
         .container {
             background: white;
-            padding: 25px;
+            padding: 20px 16px;
             border-radius: 12px;
             box-shadow: 0 6px 25px rgba(0,0,0,0.12);
             max-width: 780px;
             width: 100%;
+            box-sizing: border-box;
         }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 8px; font-weight: 700; }
-        p.subtitle { text-align: center; color: #34495e; margin-bottom: 20px; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 8px; font-weight: 700; font-size: clamp(20px, 5vw, 28px); }
+        p.subtitle { text-align: center; color: #34495e; margin-bottom: 16px; font-size: clamp(13px, 3.5vw, 15px); }
 
-        /* NAV TABS — large, prominent */
         .tabs {
             display: flex;
             justify-content: center;
-            gap: 5px;
+            gap: 4px;
             margin-bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
         }
         .tab {
-            padding: 16px 38px;
+            flex: 1;
+            padding: 12px 6px;
             background: linear-gradient(135deg, #1a6fa8, #2980b9);
             color: rgba(255,255,255,0.72);
             border: none;
-            border-radius: 11px 11px 0 0;
+            border-radius: 10px 10px 0 0;
             cursor: pointer;
-            font-size: 17px;
+            font-size: clamp(12px, 3.2vw, 16px);
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             transition: all 0.25s ease;
-            min-width: 170px;
             text-align: center;
             position: relative;
             top: 3px;
             border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            min-width: 0;
         }
         .tab:hover {
             background: linear-gradient(135deg, #1f7fc0, #3498db);
@@ -64,34 +71,34 @@
             box-shadow: 0 -4px 14px rgba(0,0,0,0.12);
             top: 0;
             z-index: 2;
-            font-size: 18px;
+            font-size: clamp(13px, 3.5vw, 17px);
         }
         .tab-bar-border {
             border-top: 3px solid #2980b9;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             position: relative;
             z-index: 1;
         }
 
-        /* ACTION BUTTONS — smaller, teal-green to differentiate */
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         .action-btn {
-            padding: 9px 20px;
+            padding: 9px 18px;
             background: linear-gradient(135deg, #27ae60, #1e8449);
             color: white;
             border: none;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: clamp(12px, 3.2vw, 14px);
             font-weight: 700;
-            letter-spacing: 0.2px;
             transition: all 0.25s;
             box-shadow: 0 2px 8px rgba(39,174,96,0.3);
+            white-space: nowrap;
         }
         .action-btn:hover {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
@@ -100,18 +107,18 @@
         }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #e0e0e0; padding: 12px; text-align: left; }
+        th, td { border: 1px solid #e0e0e0; padding: 10px 8px; text-align: left; font-size: clamp(12px, 3.2vw, 14.5px); }
         th { background-color: #3498db; color: white; font-weight: 700; }
         tr:nth-child(even) { background-color: #f8f9fa; }
 
         select, input[type="text"] {
             width: 100%;
-            padding: 8px;
+            padding: 7px;
             box-sizing: border-box;
             border: 1px solid #d1d5db;
             border-radius: 5px;
             font-family: 'Roboto', sans-serif;
-            font-size: 14.5px;
+            font-size: clamp(12px, 3.2vw, 14px);
         }
         select:focus, input[type="text"]:focus {
             outline: none;
@@ -122,89 +129,115 @@
         .content-section { display: none; }
         .content-section.active { display: block; }
 
-        /* Management */
         .management-container {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             border: 1px solid #e0e0e0;
             border-radius: 14px;
-            padding: 30px;
+            padding: 20px 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         .tirads-card {
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.25s, box-shadow 0.25s;
         }
-        .tirads-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .tirads-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .tirads-header {
-            padding: 16px 22px;
+            padding: 14px 16px;
             color: white;
             font-weight: 700;
-            font-size: 19px;
+            font-size: clamp(14px, 4vw, 18px);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
         }
-        .tirads-body { padding: 20px 22px; background: white; font-size: 15.5px; line-height: 1.65; }
-        .score-range { font-size: 14.5px; font-weight: 400; }
-        .note { text-align: center; font-size: 13.5px; color: #555; margin-top: 20px; font-style: italic; }
-        .copyright { text-align: center; font-size: 12px; color: #666; margin-top: 30px; }
+        .tirads-body { padding: 16px; background: white; font-size: clamp(13px, 3.5vw, 15px); line-height: 1.65; }
+        .score-range { font-size: clamp(12px, 3vw, 14px); font-weight: 400; }
+        .note { text-align: center; font-size: clamp(11px, 2.8vw, 13px); color: #555; margin-top: 16px; font-style: italic; }
+        .copyright { text-align: center; font-size: 12px; color: #666; margin-top: 24px; }
 
-        /* Lexicon */
         .lexicon-container {
             background: linear-gradient(135deg, #f8fafc, #ffffff);
             border: 1px solid #e0e0e0;
             border-radius: 14px;
-            padding: 28px;
+            padding: 20px 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
-        .lexicon-intro { text-align: center; color: #555; font-size: 14px; font-style: italic; margin-bottom: 24px; }
+        .lexicon-intro { text-align: center; color: #555; font-size: clamp(12px, 3vw, 14px); font-style: italic; margin-bottom: 20px; }
         .lex-card {
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             box-shadow: 0 4px 14px rgba(0,0,0,0.09);
             transition: transform 0.25s, box-shadow 0.25s;
         }
-        .lex-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.14); }
+        .lex-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.14); }
         .lex-header {
-            padding: 14px 20px;
+            padding: 12px 16px;
             color: white;
             font-weight: 700;
-            font-size: 17px;
+            font-size: clamp(14px, 3.8vw, 17px);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .lex-pts {
             margin-left: auto;
-            font-size: 13px;
+            font-size: clamp(11px, 2.8vw, 13px);
             font-weight: 400;
             opacity: 0.9;
             background: rgba(255,255,255,0.2);
             border-radius: 20px;
-            padding: 3px 10px;
+            padding: 3px 9px;
+            white-space: nowrap;
         }
         .lex-body { background: white; padding: 0; }
-        .lex-row { display: grid; grid-template-columns: 1fr 1fr; }
+        .lex-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 520px) {
+            .lex-row { grid-template-columns: 1fr; }
+            .lex-item { border-right: none !important; }
+            .lex-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid #f0f0f0 !important; }
+        }
         .lex-item {
-            padding: 14px 18px;
+            padding: 12px 14px;
             border-bottom: 1px solid #f0f0f0;
             border-right: 1px solid #f0f0f0;
         }
         .lex-item:nth-child(even) { border-right: none; }
-        .lex-item:last-child, .lex-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
-        .lex-item-title { font-weight: 700; font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-        .lex-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 10px; color: white; }
-        .lex-item-desc { font-size: 13px; color: #555; line-height: 1.5; }
+        .lex-item:last-child { border-bottom: none; }
+        .lex-item-title {
+            font-weight: 700;
+            font-size: clamp(12px, 3vw, 13.5px);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .lex-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 10px;
+            color: white;
+            white-space: nowrap;
+        }
+        .lex-item-desc { font-size: clamp(11px, 2.8vw, 13px); color: #555; line-height: 1.5; }
         .lex-note-box {
             background: #f0f7ff;
             border-left: 4px solid #3498db;
             border-radius: 0 0 10px 10px;
-            padding: 12px 18px;
-            font-size: 13px;
+            padding: 11px 14px;
+            font-size: clamp(11px, 2.8vw, 13px);
             color: #444;
             line-height: 1.55;
         }
@@ -245,7 +278,7 @@
             </tr>
             <tr>
                 <td>Size (cm)</td>
-                <td><input type="text" id="size" placeholder="Enter size in cm (e.g., 2.5)"></td>
+                <td><input type="text" id="size" placeholder="e.g., 2.5"></td>
             </tr>
             <tr>
                 <td>Composition</td>
@@ -323,8 +356,8 @@
     <!-- Management Tab -->
     <div id="management-tab" class="content-section">
         <div class="management-container">
-            <h2 style="text-align:center;color:#2c3e50;margin-bottom:10px;">TI-RADS Management Guidelines</h2>
-            <p style="text-align:center;color:#555;margin-bottom:25px;">2017 ACR White Paper – FNA and Follow-up Recommendations</p>
+            <h2 style="text-align:center;color:#2c3e50;margin-bottom:10px;font-size:clamp(16px,4.5vw,22px);">TI-RADS Management Guidelines</h2>
+            <p style="text-align:center;color:#555;margin-bottom:20px;font-size:clamp(12px,3vw,14px);">2017 ACR White Paper – FNA and Follow-up Recommendations</p>
             <div class="tirads-card" style="border:3px solid #E0F2E9;">
                 <div class="tirads-header" style="background:linear-gradient(90deg,#4ade80,#22c55e);">
                     TR1 — Benign <span class="score-range">(0 points)</span>
@@ -371,8 +404,9 @@
     <!-- Lexicon Tab -->
     <div id="lexicon-tab" class="content-section">
         <div class="lexicon-container">
-            <h2 style="text-align:center;color:#2c3e50;margin-bottom:6px;">ACR TI-RADS Lexicon</h2>
+            <h2 style="text-align:center;color:#2c3e50;margin-bottom:6px;font-size:clamp(16px,4.5vw,22px);">ACR TI-RADS Lexicon</h2>
             <p class="lexicon-intro">Feature definitions and scoring notes from the 2017 ACR White Paper</p>
+
             <div class="lex-card" style="border:2px solid #bfdbfe;">
                 <div class="lex-header" style="background:linear-gradient(90deg,#3b82f6,#2563eb);">
                     <span>🧱</span> Composition <span class="lex-pts">Choose 1 · Max 2 pts</span>
@@ -387,6 +421,7 @@
                     <div class="lex-note-box"><strong>⚠️ Note:</strong> If calcification causes strong acoustic shadowing that prevents assessment of composition, assume the nodule is <strong>solid</strong> and assign <strong>2 points</strong> for composition.</div>
                 </div>
             </div>
+
             <div class="lex-card" style="border:2px solid #c4b5fd;">
                 <div class="lex-header" style="background:linear-gradient(90deg,#8b5cf6,#6d28d9);">
                     <span>🔊</span> Echogenicity <span class="lex-pts">Choose 1 · Max 3 pts</span>
@@ -401,6 +436,7 @@
                     <div class="lex-note-box"><strong>⚠️ Note:</strong> If echogenicity cannot be determined (e.g. due to shadowing calcification), assign <strong>1 point</strong>. All comparisons are made against <em>adjacent thyroid parenchyma</em>.</div>
                 </div>
             </div>
+
             <div class="lex-card" style="border:2px solid #6ee7b7;">
                 <div class="lex-header" style="background:linear-gradient(90deg,#10b981,#059669);">
                     <span>📐</span> Shape <span class="lex-pts">Choose 1 · Max 3 pts</span>
@@ -413,6 +449,7 @@
                     <div class="lex-note-box"><strong>💡 Tip:</strong> Shape must be assessed in the <strong>axial (transverse) plane</strong>. Height is the dimension measured perpendicular to the sound beam; width is measured parallel to the transducer footprint.</div>
                 </div>
             </div>
+
             <div class="lex-card" style="border:2px solid #fca5a5;">
                 <div class="lex-header" style="background:linear-gradient(90deg,#f97316,#dc2626);">
                     <span>🔲</span> Margin <span class="lex-pts">Choose 1 · Max 3 pts</span>
@@ -427,6 +464,7 @@
                     <div class="lex-note-box"><strong>⚠️ Note:</strong> If margin cannot be determined, assign <strong>0 points</strong>. The anterior margin is usually most reliable to evaluate. Extra-thyroidal extension should only be scored when <em>obvious</em>.</div>
                 </div>
             </div>
+
             <div class="lex-card" style="border:2px solid #fde68a;">
                 <div class="lex-header" style="background:linear-gradient(90deg,#f59e0b,#b45309);">
                     <span>✨</span> Echogenic Foci <span class="lex-pts">Choose all that apply · Max 3 pts</span>
@@ -441,6 +479,7 @@
                     <div class="lex-note-box"><strong>⚠️ Note:</strong> Foci must be <strong>clearly identifiable and confined within the nodule</strong>. Punctate foci in cystic spaces with large comet-tail artifacts represent colloid and are <strong>not</strong> scored as suspicious. If composition cannot be assessed due to calcification, assign <strong>2 pts for composition</strong>.</div>
                 </div>
             </div>
+
             <p class="note">ACR TI-RADS 2017 White Paper · Tessler FN et al. J Am Coll Radiol. 2017;14:587–595</p>
         </div>
     </div>
