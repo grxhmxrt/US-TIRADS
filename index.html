@@ -1,552 +1,1136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TI-RADS Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 16px;
-            background: linear-gradient(135deg, #e6f0fa 0%, #f7f9fc 100%);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        .container {
-            background: white;
-            padding: 20px 16px;
-            border-radius: 12px;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.12);
-            max-width: 780px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 8px; font-weight: 700; font-size: clamp(20px, 5vw, 28px); }
-        p.subtitle { text-align: center; color: #34495e; margin-bottom: 16px; font-size: clamp(13px, 3.5vw, 15px); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TI-RADS Calculator</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a2f45;
+    --accent: #4a9eff;
+    --accent-dim: rgba(74, 158, 255, 0.12);
+    --accent-glow: rgba(74, 158, 255, 0.25);
+    --text: #e8ecf4;
+    --text-muted: #7a85a0;
+    --text-dim: #4a5270;
+    --success: #34d399;
+    --success-dim: rgba(52, 211, 153, 0.12);
+    --warning: #fbbf24;
+    --warning-dim: rgba(251, 191, 36, 0.12);
+    --danger: #f87171;
+    --danger-dim: rgba(248, 113, 113, 0.12);
+    --tr1: #34d399;
+    --tr2: #60a5fa;
+    --tr3: #fbbf24;
+    --tr4: #fb923c;
+    --tr5: #f87171;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  }
 
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            margin-bottom: 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .tab {
-            flex: 1;
-            padding: 12px 6px;
-            background: linear-gradient(135deg, #1a6fa8, #2980b9);
-            color: rgba(255,255,255,0.72);
-            border: none;
-            border-radius: 10px 10px 0 0;
-            cursor: pointer;
-            font-size: clamp(12px, 3.2vw, 16px);
-            font-weight: 700;
-            letter-spacing: 0.2px;
-            transition: all 0.25s ease;
-            text-align: center;
-            position: relative;
-            top: 3px;
-            border-bottom: 3px solid transparent;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            box-sizing: border-box;
-            min-width: 0;
-        }
-        .tab:hover {
-            background: linear-gradient(135deg, #1f7fc0, #3498db);
-            color: rgba(255,255,255,0.92);
-            top: 1px;
-        }
-        .tab.active {
-            background: linear-gradient(135deg, #ffffff, #f0f7ff);
-            color: #1a5f8a;
-            border-bottom: 3px solid white;
-            box-shadow: 0 -4px 14px rgba(0,0,0,0.12);
-            top: 0;
-            z-index: 2;
-            font-size: clamp(13px, 3.5vw, 17px);
-        }
-        .tab-bar-border {
-            border-top: 3px solid #2980b9;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .action-btn {
-            padding: 9px 18px;
-            background: linear-gradient(135deg, #27ae60, #1e8449);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: clamp(12px, 3.2vw, 14px);
-            font-weight: 700;
-            transition: all 0.25s;
-            box-shadow: 0 2px 8px rgba(39,174,96,0.3);
-            white-space: nowrap;
-        }
-        .action-btn:hover {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39,174,96,0.4);
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #e0e0e0; padding: 10px 8px; text-align: left; font-size: clamp(12px, 3.2vw, 14.5px); }
-        th { background-color: #3498db; color: white; font-weight: 700; }
-        tr:nth-child(even) { background-color: #f8f9fa; }
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
 
-        select, input[type="text"] {
-            width: 100%;
-            padding: 7px;
-            box-sizing: border-box;
-            border: 1px solid #d1d5db;
-            border-radius: 5px;
-            font-family: 'Roboto', sans-serif;
-            font-size: clamp(12px, 3.2vw, 14px);
-        }
-        select:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 6px rgba(52,152,219,0.4);
-        }
-        input[type="text"][readonly] { background-color: #f8f9fa; cursor: not-allowed; }
-        .content-section { display: none; }
-        .content-section.active { display: block; }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
 
-        .management-container {
-            background: linear-gradient(135deg, #f8fafc, #ffffff);
-            border: 1px solid #e0e0e0;
-            border-radius: 14px;
-            padding: 20px 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .tirads-card {
-            margin-bottom: 16px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.25s, box-shadow 0.25s;
-        }
-        .tirads-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .tirads-header {
-            padding: 14px 16px;
-            color: white;
-            font-weight: 700;
-            font-size: clamp(14px, 4vw, 18px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .tirads-body { padding: 16px; background: white; font-size: clamp(13px, 3.5vw, 15px); line-height: 1.65; }
-        .score-range { font-size: clamp(12px, 3vw, 14px); font-weight: 400; }
-        .note { text-align: center; font-size: clamp(11px, 2.8vw, 13px); color: #555; margin-top: 16px; font-style: italic; }
-        .copyright { text-align: center; font-size: 12px; color: #666; margin-top: 24px; }
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
 
-        .lexicon-container {
-            background: linear-gradient(135deg, #f8fafc, #ffffff);
-            border: 1px solid #e0e0e0;
-            border-radius: 14px;
-            padding: 20px 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .lexicon-intro { text-align: center; color: #555; font-size: clamp(12px, 3vw, 14px); font-style: italic; margin-bottom: 20px; }
-        .lex-card {
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.09);
-            transition: transform 0.25s, box-shadow 0.25s;
-        }
-        .lex-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.14); }
-        .lex-header {
-            padding: 12px 16px;
-            color: white;
-            font-weight: 700;
-            font-size: clamp(14px, 3.8vw, 17px);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .lex-pts {
-            margin-left: auto;
-            font-size: clamp(11px, 2.8vw, 13px);
-            font-weight: 400;
-            opacity: 0.9;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 3px 9px;
-            white-space: nowrap;
-        }
-        .lex-body { background: white; padding: 0; }
-        .lex-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        @media (max-width: 520px) {
-            .lex-row { grid-template-columns: 1fr; }
-            .lex-item { border-right: none !important; }
-            .lex-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid #f0f0f0 !important; }
-        }
-        .lex-item {
-            padding: 12px 14px;
-            border-bottom: 1px solid #f0f0f0;
-            border-right: 1px solid #f0f0f0;
-        }
-        .lex-item:nth-child(even) { border-right: none; }
-        .lex-item:last-child { border-bottom: none; }
-        .lex-item-title {
-            font-weight: 700;
-            font-size: clamp(12px, 3vw, 13.5px);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .lex-badge {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 1px 7px;
-            border-radius: 10px;
-            color: white;
-            white-space: nowrap;
-        }
-        .lex-item-desc { font-size: clamp(11px, 2.8vw, 13px); color: #555; line-height: 1.5; }
-        .lex-note-box {
-            background: #f0f7ff;
-            border-left: 4px solid #3498db;
-            border-radius: 0 0 10px 10px;
-            padding: 11px 14px;
-            font-size: clamp(11px, 2.8vw, 13px);
-            color: #444;
-            line-height: 1.55;
-        }
-        .lex-note-box strong { color: #2c3e50; }
-    </style>
+  .header-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  .header-text p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 2px;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px 10px;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-icon { font-size: 14px; }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CALCULATOR ── */
+  .calc-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.15s;
+  }
+
+  .field-row:hover { border-color: var(--border); }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .field-label .sublabel {
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-dim);
+    display: block;
+    margin-top: 2px;
+  }
+
+  select, input[type="number"], input[type="text"] {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    padding: 8px 12px;
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237a85a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  select:focus, input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    outline: none;
+  }
+
+  select option { background: var(--surface2); }
+
+  /* ── RESULT CARD ── */
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-top: 6px;
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .tr-badge {
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-dim);
+    transition: color 0.3s;
+  }
+
+  .tr-badge.tr1 { color: var(--tr1); }
+  .tr-badge.tr2 { color: var(--tr2); }
+  .tr-badge.tr3 { color: var(--tr3); }
+  .tr-badge.tr4 { color: var(--tr4); }
+  .tr-badge.tr5 { color: var(--tr5); }
+
+  .result-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    min-height: 20px;
+  }
+
+  .result-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .result-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 13px;
+  }
+
+  .result-key {
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-top: 1px;
+  }
+
+  .result-val {
+    color: var(--text);
+  }
+
+  .result-val.muted { color: var(--text-muted); }
+
+  /* ── ACTIONS ── */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    transition: opacity 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { opacity: 0.88; }
+
+  .btn-secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-secondary:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
+
+  /* ── MANAGEMENT TAB ── */
+  .mgmt-intro {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent);
+  }
+
+  .mgmt-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mgmt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    border-left: 4px solid transparent;
+  }
+
+  .mgmt-card.tr1 { border-left-color: var(--tr1); }
+  .mgmt-card.tr2 { border-left-color: var(--tr2); }
+  .mgmt-card.tr3 { border-left-color: var(--tr3); }
+  .mgmt-card.tr4 { border-left-color: var(--tr4); }
+  .mgmt-card.tr5 { border-left-color: var(--tr5); }
+
+  .mgmt-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .mgmt-badge {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .mgmt-card.tr1 .mgmt-badge { color: var(--tr1); }
+  .mgmt-card.tr2 .mgmt-badge { color: var(--tr2); }
+  .mgmt-card.tr3 .mgmt-badge { color: var(--tr3); }
+  .mgmt-card.tr4 .mgmt-badge { color: var(--tr4); }
+  .mgmt-card.tr5 .mgmt-badge { color: var(--tr5); }
+
+  .mgmt-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .mgmt-malignancy {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .mgmt-body {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .mgmt-body p { margin-bottom: 6px; }
+  .mgmt-body p:last-child { margin-bottom: 0; }
+
+  .mgmt-body strong { color: var(--text); }
+
+  .mgmt-note {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: var(--accent-dim);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--text-muted);
+    border: 1px solid rgba(74,158,255,0.15);
+  }
+
+  /* ── LEXICON TAB ── */
+  .lex-section {
+    margin-bottom: 28px;
+  }
+
+  .lex-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lex-icon {
+    font-size: 18px;
+    width: 32px;
+    text-align: center;
+  }
+
+  .lex-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .lex-section-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-left: auto;
+    font-style: italic;
+  }
+
+  .lex-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .lex-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+
+  .lex-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .lex-item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .lex-item-points {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .lex-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 2px solid var(--warning);
+  }
+
+  .lex-tip {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 2px solid var(--accent);
+  }
+
+  .lex-item-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 20px 20px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  footer a { color: var(--text-muted); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  /* ── COPY TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .field-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .result-row {
+      grid-template-columns: 90px 1fr;
+    }
+    .actions {
+      flex-direction: column;
+    }
+    .actions .btn {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <h1>TI-RADS Calculator</h1>
-    <p class="subtitle">Calculates TI-RADS Score based on 2017 ACR White Paper</p>
 
-    <div class="tabs">
-        <button class="tab active" onclick="showTab(0)">🧮 Calculator</button>
-        <button class="tab" onclick="showTab(1)">📋 Management</button>
-        <button class="tab" onclick="showTab(2)">📖 Lexicon</button>
+<header>
+  <div class="header-top">
+    <div class="logo-mark">TR</div>
+    <div class="header-text">
+      <h1>TI-RADS Calculator</h1>
+      <p>Calculates TI-RADS score based on 2017 ACR White Paper</p>
     </div>
-    <div class="tab-bar-border"></div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="calculator" aria-selected="true">
+      <span class="tab-icon">🧮</span> Calculator
+    </button>
+    <button class="tab-btn" role="tab" data-tab="management" aria-selected="false">
+      <span class="tab-icon">📋</span> Management
+    </button>
+    <button class="tab-btn" role="tab" data-tab="lexicon" aria-selected="false">
+      <span class="tab-icon">📖</span> Lexicon
+    </button>
+  </nav>
+</header>
 
-    <!-- Calculator Tab -->
-    <div id="calculator-tab" class="content-section active">
-        <div class="button-container">
-            <button class="action-btn" onclick="resetValues()">↺ Reset Values</button>
-            <button class="action-btn" onclick="calculateScore()">✓ Calculate Score</button>
-            <button class="action-btn" onclick="copyReport()">⎘ Copy Report</button>
+<main>
+
+  <!-- ═══════════════════════════ CALCULATOR ═══════════════════════════ -->
+  <div id="tab-calculator" class="tab-panel active">
+
+    <div class="calc-grid">
+
+      <div class="field-row">
+        <label class="field-label" for="location">Location</label>
+        <select id="location">
+          <option value="">Select…</option>
+          <option value="Right">Right</option>
+          <option value="Isthmus">Isthmus</option>
+          <option value="Left">Left</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="size">Size (cm)</label>
+        <input type="number" id="size" placeholder="e.g. 1.5" min="0" step="0.1">
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="composition">Composition</label>
+        <select id="composition" data-points='{"cystic":0,"spongiform":0,"mixed":1,"solid":2}'>
+          <option value="">Select…</option>
+          <option value="cystic">Cystic or almost completely cystic (0)</option>
+          <option value="spongiform">Spongiform (0)</option>
+          <option value="mixed">Mixed cystic and solid (1)</option>
+          <option value="solid">Solid or almost completely solid (2)</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="echogenicity">Echogenicity</label>
+        <select id="echogenicity" data-points='{"anechoic":0,"hyperiso":1,"hypo":2,"very_hypo":3}'>
+          <option value="">Select…</option>
+          <option value="anechoic">Anechoic (0)</option>
+          <option value="hyperiso">Hyperechoic or isoechoic (1)</option>
+          <option value="hypo">Hypoechoic (2)</option>
+          <option value="very_hypo">Very hypoechoic (3)</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="shape">Shape</label>
+        <select id="shape" data-points='{"wider":0,"taller":3}'>
+          <option value="">Select…</option>
+          <option value="wider">Wider-than-tall (0)</option>
+          <option value="taller">Taller-than-wide (3)</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="margin">Margin</label>
+        <select id="margin" data-points='{"smooth":0,"ill_defined":0,"lobulated":2,"ete":3}'>
+          <option value="">Select…</option>
+          <option value="smooth">Smooth (0)</option>
+          <option value="ill_defined">Ill-defined (0)</option>
+          <option value="lobulated">Lobulated or irregular (2)</option>
+          <option value="ete">Extra-thyroidal extension (3)</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="foci">Echogenic Foci</label>
+        <select id="foci" data-points='{"none":0,"macro":1,"peripheral":2,"punctate":3}'>
+          <option value="">Select…</option>
+          <option value="none">None or large comet-tail artifacts (0)</option>
+          <option value="macro">Macrocalcifications (1)</option>
+          <option value="peripheral">Peripheral calcifications (2)</option>
+          <option value="punctate">Punctate echogenic foci (3)</option>
+        </select>
+      </div>
+
+    </div><!-- end calc-grid -->
+
+    <!-- Result -->
+    <div class="result-card" style="margin-top: 18px;">
+      <div class="result-header">
+        <span class="result-label">TI-RADS Score</span>
+        <span class="tr-badge" id="tr-badge">—</span>
+      </div>
+      <div class="result-desc" id="result-desc">Complete the fields above and press Calculate.</div>
+      <div class="result-rows" id="result-rows" style="display:none;">
+        <div class="result-row">
+          <span class="result-key">Nodule</span>
+          <span class="result-val" id="res-nodule">—</span>
         </div>
-        <table>
-            <tr><th>Feature</th><th>Details</th></tr>
-            <tr>
-                <td>Location</td>
-                <td>
-                    <select id="location">
-                        <option value="">Select...</option>
-                        <option value="Right">Right</option>
-                        <option value="Isthmus">Isthmus</option>
-                        <option value="Left">Left</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Size (cm)</td>
-                <td><input type="text" id="size" placeholder="e.g., 2.5"></td>
-            </tr>
-            <tr>
-                <td>Composition</td>
-                <td>
-                    <select id="composition">
-                        <option value="">Select...</option>
-                        <option value="0">Cystic or almost completely cystic (0)</option>
-                        <option value="0">Spongiform (0)</option>
-                        <option value="1">Mixed cystic and solid (1)</option>
-                        <option value="2">Solid or almost completely solid (2)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Echogenicity</td>
-                <td>
-                    <select id="echogenicity">
-                        <option value="">Select...</option>
-                        <option value="0">Anechoic (0)</option>
-                        <option value="1">Hyperechoic or isoechoic (1)</option>
-                        <option value="2">Hypoechoic (2)</option>
-                        <option value="3">Very hypoechoic (3)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Shape</td>
-                <td>
-                    <select id="shape">
-                        <option value="">Select...</option>
-                        <option value="0">Wider-than-tall (0)</option>
-                        <option value="3">Taller-than-wide (3)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Margin</td>
-                <td>
-                    <select id="margin">
-                        <option value="">Select...</option>
-                        <option value="0">Smooth (0)</option>
-                        <option value="0">Ill-defined (0)</option>
-                        <option value="2">Lobulated or irregular (2)</option>
-                        <option value="3">Extra-thyroidal extension (3)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Echogenic Foci</td>
-                <td>
-                    <select id="echogenicFoci">
-                        <option value="">Select...</option>
-                        <option value="0">None or large comet-tail artifacts (0)</option>
-                        <option value="1">Macrocalcifications (1)</option>
-                        <option value="2">Peripheral calcifications (2)</option>
-                        <option value="3">Punctate echogenic foci (3)</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>TI-RADS Score</td>
-                <td><input type="text" id="tiRadsScore" value="" readonly></td>
-            </tr>
-            <tr>
-                <td>Recommendations</td>
-                <td><input type="text" id="recommendations" value="" readonly></td>
-            </tr>
-            <tr>
-                <td>Follow-up</td>
-                <td><input type="text" id="followup" value="" readonly></td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- Management Tab -->
-    <div id="management-tab" class="content-section">
-        <div class="management-container">
-            <h2 style="text-align:center;color:#2c3e50;margin-bottom:10px;font-size:clamp(16px,4.5vw,22px);">TI-RADS Management Guidelines</h2>
-            <p style="text-align:center;color:#555;margin-bottom:20px;font-size:clamp(12px,3vw,14px);">2017 ACR White Paper – FNA and Follow-up Recommendations</p>
-            <div class="tirads-card" style="border:3px solid #E0F2E9;">
-                <div class="tirads-header" style="background:linear-gradient(90deg,#4ade80,#22c55e);">
-                    TR1 — Benign <span class="score-range">(0 points)</span>
-                </div>
-                <div class="tirads-body">No FNA required.<br>No follow-up required.</div>
-            </div>
-            <div class="tirads-card" style="border:3px solid #FFF7CC;">
-                <div class="tirads-header" style="background:linear-gradient(90deg,#fde047,#facc15);">
-                    TR2 — Not suspicious <span class="score-range">(2 points)</span>
-                </div>
-                <div class="tirads-body">No FNA required.<br>No follow-up required.</div>
-            </div>
-            <div class="tirads-card" style="border:3px solid #FFE066;">
-                <div class="tirads-header" style="background:linear-gradient(90deg,#fcd34d,#f59e0b);">
-                    TR3 — Mildly suspicious <span class="score-range">(3 points)</span>
-                </div>
-                <div class="tirads-body">
-                    <strong>FNA if:</strong> ≥ 2.5 cm<br>
-                    <strong>Follow-up if:</strong> ≥ 1.5 cm (at 1, 3, and 5 years)
-                </div>
-            </div>
-            <div class="tirads-card" style="border:3px solid #FFCC99;">
-                <div class="tirads-header" style="background:linear-gradient(90deg,#fb923c,#f97316);">
-                    TR4 — Moderately suspicious <span class="score-range">(4–6 points)</span>
-                </div>
-                <div class="tirads-body">
-                    <strong>FNA if:</strong> ≥ 1.5 cm<br>
-                    <strong>Follow-up if:</strong> ≥ 1.0 cm (at 1, 2, 3, and 5 years)
-                </div>
-            </div>
-            <div class="tirads-card" style="border:3px solid #FF9999;">
-                <div class="tirads-header" style="background:linear-gradient(90deg,#f87171,#ef4444);">
-                    TR5 — Highly suspicious <span class="score-range">(≥7 points)</span>
-                </div>
-                <div class="tirads-body">
-                    <strong>FNA if:</strong> ≥ 1.0 cm<br>
-                    <strong>Follow-up if:</strong> ≥ 0.5 cm (annually for up to 5 years)
-                </div>
-            </div>
-            <p class="note">Always integrate with clinical context and patient-specific factors. Based on ACR TI-RADS 2017.</p>
+        <div class="result-row">
+          <span class="result-key">Points</span>
+          <span class="result-val" id="res-points">—</span>
         </div>
-    </div>
-
-    <!-- Lexicon Tab -->
-    <div id="lexicon-tab" class="content-section">
-        <div class="lexicon-container">
-            <h2 style="text-align:center;color:#2c3e50;margin-bottom:6px;font-size:clamp(16px,4.5vw,22px);">ACR TI-RADS Lexicon</h2>
-            <p class="lexicon-intro">Feature definitions and scoring notes from the 2017 ACR White Paper</p>
-
-            <div class="lex-card" style="border:2px solid #bfdbfe;">
-                <div class="lex-header" style="background:linear-gradient(90deg,#3b82f6,#2563eb);">
-                    <span>🧱</span> Composition <span class="lex-pts">Choose 1 · Max 2 pts</span>
-                </div>
-                <div class="lex-body">
-                    <div class="lex-row">
-                        <div class="lex-item"><div class="lex-item-title">Cystic or almost completely cystic <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">Entirely or nearly entirely fluid-filled. No solid component.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Spongiform <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">Composed predominantly (&gt;50%) of small cystic spaces. Aggregated microcystic appearance. Considered benign.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Mixed cystic and solid <span class="lex-badge" style="background:#f59e0b;">1 pt</span></div><div class="lex-item-desc">Contains both cystic and solid components. Score points for the predominant solid portion.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Solid or almost completely solid <span class="lex-badge" style="background:#ef4444;">2 pts</span></div><div class="lex-item-desc">Little or no cystic component. Predominantly solid tissue throughout.</div></div>
-                    </div>
-                    <div class="lex-note-box"><strong>⚠️ Note:</strong> If calcification causes strong acoustic shadowing that prevents assessment of composition, assume the nodule is <strong>solid</strong> and assign <strong>2 points</strong> for composition.</div>
-                </div>
-            </div>
-
-            <div class="lex-card" style="border:2px solid #c4b5fd;">
-                <div class="lex-header" style="background:linear-gradient(90deg,#8b5cf6,#6d28d9);">
-                    <span>🔊</span> Echogenicity <span class="lex-pts">Choose 1 · Max 3 pts</span>
-                </div>
-                <div class="lex-body">
-                    <div class="lex-row">
-                        <div class="lex-item"><div class="lex-item-title">Anechoic <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">Applies to cystic or almost completely cystic nodules. No internal echoes.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Hyperechoic or isoechoic <span class="lex-badge" style="background:#f59e0b;">1 pt</span></div><div class="lex-item-desc">Equal to or greater than echogenicity of adjacent thyroid parenchyma.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Hypoechoic <span class="lex-badge" style="background:#f97316;">2 pts</span></div><div class="lex-item-desc">Less echogenic than adjacent thyroid parenchyma but more echogenic than strap muscles.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Very hypoechoic <span class="lex-badge" style="background:#ef4444;">3 pts</span></div><div class="lex-item-desc">More hypoechoic than the adjacent strap muscles. Strong predictor of malignancy.</div></div>
-                    </div>
-                    <div class="lex-note-box"><strong>⚠️ Note:</strong> If echogenicity cannot be determined (e.g. due to shadowing calcification), assign <strong>1 point</strong>. All comparisons are made against <em>adjacent thyroid parenchyma</em>.</div>
-                </div>
-            </div>
-
-            <div class="lex-card" style="border:2px solid #6ee7b7;">
-                <div class="lex-header" style="background:linear-gradient(90deg,#10b981,#059669);">
-                    <span>📐</span> Shape <span class="lex-pts">Choose 1 · Max 3 pts</span>
-                </div>
-                <div class="lex-body">
-                    <div class="lex-row">
-                        <div class="lex-item"><div class="lex-item-title">Wider-than-tall <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">The nodule's width exceeds its height (AP dimension) in the transverse plane. Considered a benign orientation.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Taller-than-wide <span class="lex-badge" style="background:#ef4444;">3 pts</span></div><div class="lex-item-desc">Height (AP dimension) exceeds width, measured perpendicular to the sound beam in the transverse plane. Strong independent predictor of malignancy.</div></div>
-                    </div>
-                    <div class="lex-note-box"><strong>💡 Tip:</strong> Shape must be assessed in the <strong>axial (transverse) plane</strong>. Height is the dimension measured perpendicular to the sound beam; width is measured parallel to the transducer footprint.</div>
-                </div>
-            </div>
-
-            <div class="lex-card" style="border:2px solid #fca5a5;">
-                <div class="lex-header" style="background:linear-gradient(90deg,#f97316,#dc2626);">
-                    <span>🔲</span> Margin <span class="lex-pts">Choose 1 · Max 3 pts</span>
-                </div>
-                <div class="lex-body">
-                    <div class="lex-row">
-                        <div class="lex-item"><div class="lex-item-title">Smooth <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">Well-defined, even margin with no projections or protrusions into adjacent tissue.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Ill-defined <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">Margin cannot be clearly distinguished from surrounding thyroid parenchyma. A <em>benign</em> feature — do not confuse with irregular margin.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Lobulated or irregular <span class="lex-badge" style="background:#f97316;">2 pts</span></div><div class="lex-item-desc">Protrusions into adjacent thyroid tissue (lobulations), or spiculated/angulated margins. Either pattern scores 2 pts.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Extra-thyroidal extension <span class="lex-badge" style="background:#ef4444;">3 pts</span></div><div class="lex-item-desc">Obvious invasion beyond the thyroid capsule into surrounding soft tissue. When present, strongly indicates malignancy.</div></div>
-                    </div>
-                    <div class="lex-note-box"><strong>⚠️ Note:</strong> If margin cannot be determined, assign <strong>0 points</strong>. The anterior margin is usually most reliable to evaluate. Extra-thyroidal extension should only be scored when <em>obvious</em>.</div>
-                </div>
-            </div>
-
-            <div class="lex-card" style="border:2px solid #fde68a;">
-                <div class="lex-header" style="background:linear-gradient(90deg,#f59e0b,#b45309);">
-                    <span>✨</span> Echogenic Foci <span class="lex-pts">Choose all that apply · Max 3 pts</span>
-                </div>
-                <div class="lex-body">
-                    <div class="lex-row">
-                        <div class="lex-item"><div class="lex-item-title">None or large comet-tail artifacts <span class="lex-badge" style="background:#22c55e;">0 pts</span></div><div class="lex-item-desc">No echogenic foci, or foci with large V-shaped comet-tail reverberation artifacts (&gt;1 mm). Typical of colloid in cystic spaces — benign.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Macrocalcifications <span class="lex-badge" style="background:#f59e0b;">1 pt</span></div><div class="lex-item-desc">Coarse calcifications causing posterior acoustic shadowing. Disruption of the nodule margin qualifies as lobulated (additional 2 pts for margin).</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Peripheral (rim) calcifications <span class="lex-badge" style="background:#f97316;">2 pts</span></div><div class="lex-item-desc">Complete or incomplete calcification along the nodule margin. Disruption of peripheral calcification raises suspicion further.</div></div>
-                        <div class="lex-item"><div class="lex-item-title">Punctate echogenic foci <span class="lex-badge" style="background:#ef4444;">3 pts</span></div><div class="lex-item-desc">Small (&lt;1 mm), non-shadowing foci within solid component. May have tiny comet-tail artifacts. Correspond to psammomatous calcifications — highly suspicious for papillary carcinoma.</div></div>
-                    </div>
-                    <div class="lex-note-box"><strong>⚠️ Note:</strong> Foci must be <strong>clearly identifiable and confined within the nodule</strong>. Punctate foci in cystic spaces with large comet-tail artifacts represent colloid and are <strong>not</strong> scored as suspicious. If composition cannot be assessed due to calcification, assign <strong>2 pts for composition</strong>.</div>
-                </div>
-            </div>
-
-            <p class="note">ACR TI-RADS 2017 White Paper · Tessler FN et al. J Am Coll Radiol. 2017;14:587–595</p>
+        <div class="result-row">
+          <span class="result-key">Recommendation</span>
+          <span class="result-val" id="res-mgmt">—</span>
         </div>
+        <div class="result-row">
+          <span class="result-key">Follow-up</span>
+          <span class="result-val muted" id="res-followup">—</span>
+        </div>
+      </div>
     </div>
 
-    <div class="copyright">&copy; 2026 Graham Martin</div>
-</div>
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-calc">✓ Calculate Score</button>
+      <button class="btn btn-ghost" id="btn-copy" style="display:none;">⎘ Copy Report</button>
+      <button class="btn btn-ghost" id="btn-reset">↺ Reset Values</button>
+    </div>
+
+  </div><!-- end calculator -->
+
+
+  <!-- ═══════════════════════════ MANAGEMENT ═══════════════════════════ -->
+  <div id="tab-management" class="tab-panel">
+
+    <div class="mgmt-intro">
+      2017 ACR White Paper — FNA and follow-up recommendations. Always integrate with clinical context and patient-specific factors.
+    </div>
+
+    <div class="mgmt-grid">
+
+      <div class="mgmt-card tr1">
+        <div class="mgmt-title">
+          <span class="mgmt-badge">TR1</span>
+          <span class="mgmt-name">Benign</span>
+          <span class="mgmt-malignancy">0 points</span>
+        </div>
+        <div class="mgmt-body">
+          <p><strong>No FNA required. No follow-up required.</strong></p>
+        </div>
+      </div>
+
+      <div class="mgmt-card tr2">
+        <div class="mgmt-title">
+          <span class="mgmt-badge">TR2</span>
+          <span class="mgmt-name">Not suspicious</span>
+          <span class="mgmt-malignancy">2 points</span>
+        </div>
+        <div class="mgmt-body">
+          <p><strong>No FNA required. No follow-up required.</strong></p>
+        </div>
+      </div>
+
+      <div class="mgmt-card tr3">
+        <div class="mgmt-title">
+          <span class="mgmt-badge">TR3</span>
+          <span class="mgmt-name">Mildly suspicious</span>
+          <span class="mgmt-malignancy">3 points</span>
+        </div>
+        <div class="mgmt-body">
+          <p><strong>FNA if:</strong> ≥ 2.5 cm</p>
+          <p><strong>Follow-up if:</strong> ≥ 1.5 cm (at 1, 3, and 5 years)</p>
+        </div>
+      </div>
+
+      <div class="mgmt-card tr4">
+        <div class="mgmt-title">
+          <span class="mgmt-badge">TR4</span>
+          <span class="mgmt-name">Moderately suspicious</span>
+          <span class="mgmt-malignancy">4–6 points</span>
+        </div>
+        <div class="mgmt-body">
+          <p><strong>FNA if:</strong> ≥ 1.5 cm</p>
+          <p><strong>Follow-up if:</strong> ≥ 1.0 cm (at 1, 2, 3, and 5 years)</p>
+        </div>
+      </div>
+
+      <div class="mgmt-card tr5">
+        <div class="mgmt-title">
+          <span class="mgmt-badge">TR5</span>
+          <span class="mgmt-name">Highly suspicious</span>
+          <span class="mgmt-malignancy">≥7 points</span>
+        </div>
+        <div class="mgmt-body">
+          <p><strong>FNA if:</strong> ≥ 1.0 cm</p>
+          <p><strong>Follow-up if:</strong> ≥ 0.5 cm (annually for up to 5 years)</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mgmt-note">
+      Based on ACR TI-RADS 2017. Always integrate with clinical context and patient-specific factors.
+    </div>
+
+  </div><!-- end management -->
+
+
+  <!-- ═══════════════════════════ LEXICON ═══════════════════════════ -->
+  <div id="tab-lexicon" class="tab-panel">
+
+    <!-- COMPOSITION -->
+    <div class="lex-section">
+      <div class="lex-section-header">
+        <span class="lex-icon">🧱</span>
+        <span class="lex-section-title">Composition</span>
+        <span class="lex-section-sub">Choose 1 · Max 2 pts</span>
+      </div>
+      <div class="lex-items">
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Cystic or almost completely cystic</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">Entirely or nearly entirely fluid-filled. No solid component.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Spongiform</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">Composed predominantly (&gt;50%) of small cystic spaces. Aggregated microcystic appearance. Considered benign.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Mixed cystic and solid</span>
+            <span class="lex-item-points">1 pt</span>
+          </div>
+          <div class="lex-item-desc">Contains both cystic and solid components. Score points for the predominant solid portion.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Solid or almost completely solid</span>
+            <span class="lex-item-points">2 pts</span>
+          </div>
+          <div class="lex-item-desc">Little or no cystic component. Predominantly solid tissue throughout.</div>
+        </div>
+
+        <div class="lex-note">⚠️ If calcification causes strong acoustic shadowing that prevents assessment of composition, assume the nodule is solid and assign 2 points for composition.</div>
+      </div>
+    </div>
+
+    <!-- ECHOGENICITY -->
+    <div class="lex-section">
+      <div class="lex-section-header">
+        <span class="lex-icon">🔊</span>
+        <span class="lex-section-title">Echogenicity</span>
+        <span class="lex-section-sub">Choose 1 · Max 3 pts</span>
+      </div>
+      <div class="lex-items">
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Anechoic</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">Applies to cystic or almost completely cystic nodules. No internal echoes.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Hyperechoic or isoechoic</span>
+            <span class="lex-item-points">1 pt</span>
+          </div>
+          <div class="lex-item-desc">Equal to or greater than echogenicity of adjacent thyroid parenchyma.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Hypoechoic</span>
+            <span class="lex-item-points">2 pts</span>
+          </div>
+          <div class="lex-item-desc">Less echogenic than adjacent thyroid parenchyma but more echogenic than strap muscles.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Very hypoechoic</span>
+            <span class="lex-item-points">3 pts</span>
+          </div>
+          <div class="lex-item-desc">More hypoechoic than the adjacent strap muscles. Strong predictor of malignancy.</div>
+        </div>
+
+        <div class="lex-note">⚠️ If echogenicity cannot be determined (e.g. due to shadowing calcification), assign 1 point. All comparisons are made against adjacent thyroid parenchyma.</div>
+      </div>
+    </div>
+
+    <!-- SHAPE -->
+    <div class="lex-section">
+      <div class="lex-section-header">
+        <span class="lex-icon">📐</span>
+        <span class="lex-section-title">Shape</span>
+        <span class="lex-section-sub">Choose 1 · Max 3 pts</span>
+      </div>
+      <div class="lex-items">
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Wider-than-tall</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">The nodule's width exceeds its height (AP dimension) in the transverse plane. Considered a benign orientation.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Taller-than-wide</span>
+            <span class="lex-item-points">3 pts</span>
+          </div>
+          <div class="lex-item-desc">Height (AP dimension) exceeds width, measured perpendicular to the sound beam in the transverse plane. Strong independent predictor of malignancy.</div>
+        </div>
+
+        <div class="lex-tip">💡 Shape must be assessed in the axial (transverse) plane. Height is the dimension measured perpendicular to the sound beam; width is measured parallel to the transducer footprint.</div>
+      </div>
+    </div>
+
+    <!-- MARGIN -->
+    <div class="lex-section">
+      <div class="lex-section-header">
+        <span class="lex-icon">🔲</span>
+        <span class="lex-section-title">Margin</span>
+        <span class="lex-section-sub">Choose 1 · Max 3 pts</span>
+      </div>
+      <div class="lex-items">
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Smooth</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">Well-defined, even margin with no projections or protrusions into adjacent tissue.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Ill-defined</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">Margin cannot be clearly distinguished from surrounding thyroid parenchyma. A benign feature — do not confuse with irregular margin.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Lobulated or irregular</span>
+            <span class="lex-item-points">2 pts</span>
+          </div>
+          <div class="lex-item-desc">Protrusions into adjacent thyroid tissue (lobulations), or spiculated/angulated margins. Either pattern scores 2 pts.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Extra-thyroidal extension</span>
+            <span class="lex-item-points">3 pts</span>
+          </div>
+          <div class="lex-item-desc">Obvious invasion beyond the thyroid capsule into surrounding soft tissue. When present, strongly indicates malignancy.</div>
+        </div>
+
+        <div class="lex-note">⚠️ If margin cannot be determined, assign 0 points. The anterior margin is usually most reliable to evaluate. Extra-thyroidal extension should only be scored when obvious.</div>
+      </div>
+    </div>
+
+    <!-- ECHOGENIC FOCI -->
+    <div class="lex-section">
+      <div class="lex-section-header">
+        <span class="lex-icon">✨</span>
+        <span class="lex-section-title">Echogenic Foci</span>
+        <span class="lex-section-sub">Choose all that apply · Max 3 pts</span>
+      </div>
+      <div class="lex-items">
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">None or large comet-tail artifacts</span>
+            <span class="lex-item-points">0 pts</span>
+          </div>
+          <div class="lex-item-desc">No echogenic foci, or foci with large V-shaped comet-tail reverberation artifacts (&gt;1 mm). Typical of colloid in cystic spaces — benign.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Macrocalcifications</span>
+            <span class="lex-item-points">1 pt</span>
+          </div>
+          <div class="lex-item-desc">Coarse calcifications causing posterior acoustic shadowing. Disruption of the nodule margin qualifies as lobulated (additional 2 pts for margin).</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Peripheral (rim) calcifications</span>
+            <span class="lex-item-points">2 pts</span>
+          </div>
+          <div class="lex-item-desc">Complete or incomplete calcification along the nodule margin. Disruption of peripheral calcification raises suspicion further.</div>
+        </div>
+
+        <div class="lex-item">
+          <div class="lex-item-header">
+            <span class="lex-item-name">Punctate echogenic foci</span>
+            <span class="lex-item-points">3 pts</span>
+          </div>
+          <div class="lex-item-desc">Small (&lt;1 mm), non-shadowing foci within solid component. May have tiny comet-tail artifacts. Correspond to psammomatous calcifications — highly suspicious for papillary carcinoma.</div>
+        </div>
+
+        <div class="lex-note">⚠️ Foci must be clearly identifiable and confined within the nodule. Punctate foci in cystic spaces with large comet-tail artifacts represent colloid and are not scored as suspicious. If composition cannot be assessed due to calcification, assign 2 pts for composition.</div>
+      </div>
+    </div>
+
+    <div style="padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+      ACR TI-RADS 2017 White Paper · Tessler FN et al. J Am Coll Radiol. 2017;14:587–595
+    </div>
+
+  </div><!-- end lexicon -->
+
+</main>
+
+<footer>
+  <p>Based on ACR TI-RADS 2017 White Paper &nbsp;·&nbsp; For clinical decision support only — not a substitute for professional judgement</p>
+  <p style="margin-top:4px;">© 2026 Graham Martin</p>
+</footer>
+
+<div class="toast" id="toast">Report copied to clipboard</div>
 
 <script>
-    function showTab(n) {
-        document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', i === n));
-        const ids = ['calculator-tab','management-tab','lexicon-tab'];
-        document.getElementById(ids[n]).classList.add('active');
-    }
-    function resetValues() {
-        ["location","size","composition","echogenicity","shape","margin","echogenicFoci","tiRadsScore","recommendations","followup"].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = "";
-        });
-        ["tiRadsScore","recommendations","followup"].forEach(id => {
-            document.getElementById(id).style.backgroundColor = "#f8f9fa";
-        });
-    }
-    function calculateScore() {
-        let totalScore = 0;
-        ["composition","echogenicity","shape","margin","echogenicFoci"].forEach(id => {
-            totalScore += parseInt(document.getElementById(id).value) || 0;
-        });
-        let level="", rec="", followup="", color="";
-        if (totalScore<=1)      { level="TR1"; rec="Benign, no FNA required"; followup="No follow-up required"; color="#E0F2E9"; }
-        else if (totalScore===2){ level="TR2"; rec="Not suspicious, no FNA required"; followup="No follow-up required"; color="#FFF7CC"; }
-        else if (totalScore===3){ level="TR3"; rec="Mildly suspicious, FNA if ≥2.5 cm"; followup="Follow-up US at 1, 3, and 5 years if ≥1.5 cm"; color="#FFE066"; }
-        else if (totalScore<=6) { level="TR4"; rec="Moderately suspicious, FNA if ≥1.5 cm"; followup="Follow-up US at 1, 2, 3, and 5 years if ≥1.0 cm"; color="#FFCC99"; }
-        else                    { level="TR5"; rec="Highly suspicious, FNA if ≥1.0 cm"; followup="Annual follow-up US for up to 5 years if ≥0.5 cm"; color="#FF9999"; }
-        document.getElementById("tiRadsScore").value = `${totalScore} (${level})`;
-        document.getElementById("recommendations").value = rec;
-        document.getElementById("followup").value = followup;
-        ["tiRadsScore","recommendations","followup"].forEach(id => {
-            document.getElementById(id).style.backgroundColor = color;
-        });
-    }
-    function copyReport() {
-        const locEl = document.getElementById("location");
-        const location = locEl.value ? locEl.options[locEl.selectedIndex].text : "Not specified";
-        const size = document.getElementById("size").value || "Not specified";
-        const scoreText = document.getElementById("tiRadsScore").value || "Not calculated";
-        const recText = document.getElementById("recommendations").value || "";
-        const fuText = document.getElementById("followup").value || "";
-        const report = `TI-RADS Score Report\n\nLocation: ${location}\nSize: ${size} cm\nTotal TI-RADS Score: ${scoreText}\nRecommendations: ${recText}\nFollow-up: ${fuText}`;
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(report).then(() => alert(`Report copied to clipboard!\n\n${report}`)).catch(() => fallbackCopyReport(report));
-        } else { fallbackCopyReport(report); }
-    }
-    function fallbackCopyReport(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        try { document.execCommand('copy'); alert(`Report copied to clipboard!\n\n${text}`); }
-        catch (err) { alert('Failed to copy automatically.\n\nPlease copy manually:\n\n' + text); }
-        finally { document.body.removeChild(textarea); }
-    }
-    resetValues();
-    showTab(0);
+// ── TAB NAVIGATION ──────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── SCORING ──────────────────────────────────────────────────────────────────
+function getPoints(selectEl) {
+  const pointsMap = JSON.parse(selectEl.dataset.points);
+  return selectEl.value && pointsMap[selectEl.value] !== undefined ? pointsMap[selectEl.value] : 0;
+}
+
+function classify(score) {
+  if (score === 0) return { tr: 1, name: 'Benign', cls: 'tr1', mgmt: 'No FNA required.', followup: 'No follow-up required.' };
+  if (score === 2) return { tr: 2, name: 'Not suspicious', cls: 'tr2', mgmt: 'No FNA required.', followup: 'No follow-up required.' };
+  if (score === 3) return { tr: 3, name: 'Mildly suspicious', cls: 'tr3', mgmt: 'FNA if ≥ 2.5 cm', followup: 'Follow-up if ≥ 1.5 cm (at 1, 3, and 5 years)' };
+  if (score >= 4 && score <= 6) return { tr: 4, name: 'Moderately suspicious', cls: 'tr4', mgmt: 'FNA if ≥ 1.5 cm', followup: 'Follow-up if ≥ 1.0 cm (at 1, 2, 3, and 5 years)' };
+  if (score >= 7) return { tr: 5, name: 'Highly suspicious', cls: 'tr5', mgmt: 'FNA if ≥ 1.0 cm', followup: 'Follow-up if ≥ 0.5 cm (annually for up to 5 years)' };
+  return { tr: 2, name: 'Not suspicious', cls: 'tr2', mgmt: 'No FNA required.', followup: 'No follow-up required.' };
+}
+
+// ── CALCULATE ───────────────────────────────────────────────────────────────
+document.getElementById('btn-calc').addEventListener('click', () => {
+  const composition  = document.getElementById('composition');
+  const echogenicity = document.getElementById('echogenicity');
+  const shape         = document.getElementById('shape');
+  const margin         = document.getElementById('margin');
+  const foci             = document.getElementById('foci');
+
+  if (!composition.value) {
+    showToast('Please complete at least the Composition field.');
+    return;
+  }
+
+  const score = getPoints(composition) + getPoints(echogenicity) + getPoints(shape) + getPoints(margin) + getPoints(foci);
+  const result = classify(score);
+
+  const badge = document.getElementById('tr-badge');
+  badge.textContent = 'TR' + result.tr;
+  badge.className = 'tr-badge ' + result.cls;
+
+  document.getElementById('result-desc').textContent = result.name;
+
+  const location = document.getElementById('location').value || 'Not specified';
+  const size = document.getElementById('size').value;
+  const sz = size ? size + ' cm' : 'Not recorded';
+
+  document.getElementById('res-nodule').textContent = location + ' · ' + sz;
+  document.getElementById('res-points').textContent = score + ' points';
+  document.getElementById('res-mgmt').textContent = result.mgmt;
+  document.getElementById('res-followup').textContent = result.followup;
+
+  document.getElementById('result-rows').style.display = 'flex';
+  document.getElementById('btn-copy').style.display = 'flex';
+});
+
+// ── RESET ───────────────────────────────────────────────────────────────────
+document.getElementById('btn-reset').addEventListener('click', () => {
+  document.querySelectorAll('select').forEach(s => s.value = '');
+  document.querySelectorAll('input[type="number"]').forEach(i => i.value = '');
+  document.getElementById('tr-badge').textContent = '—';
+  document.getElementById('tr-badge').className = 'tr-badge';
+  document.getElementById('result-desc').textContent = 'Complete the fields above and press Calculate.';
+  document.getElementById('result-rows').style.display = 'none';
+  document.getElementById('btn-copy').style.display = 'none';
+});
+
+// ── COPY REPORT ─────────────────────────────────────────────────────────────
+document.getElementById('btn-copy').addEventListener('click', () => {
+  const location = document.getElementById('location').value || 'Not specified';
+  const size = document.getElementById('size').value || 'Not recorded';
+  const composition  = document.getElementById('composition').options[document.getElementById('composition').selectedIndex]?.text || '';
+  const echogenicity = document.getElementById('echogenicity').options[document.getElementById('echogenicity').selectedIndex]?.text || '';
+  const shape          = document.getElementById('shape').options[document.getElementById('shape').selectedIndex]?.text || '';
+  const margin          = document.getElementById('margin').options[document.getElementById('margin').selectedIndex]?.text || '';
+  const foci             = document.getElementById('foci').options[document.getElementById('foci').selectedIndex]?.text || '';
+
+  const tr     = document.getElementById('tr-badge').textContent;
+  const desc   = document.getElementById('result-desc').textContent;
+  const points = document.getElementById('res-points').textContent;
+  const mgmt   = document.getElementById('res-mgmt').textContent;
+  const followup = document.getElementById('res-followup').textContent;
+
+  const report = [
+    'THYROID ULTRASOUND — TI-RADS REPORT',
+    '─'.repeat(48),
+    '',
+    'Location:        ' + location,
+    'Size:             ' + size + (size !== 'Not recorded' ? ' cm' : ''),
+    '',
+    'FEATURES',
+    'Composition:      ' + composition,
+    'Echogenicity:     ' + echogenicity,
+    'Shape:            ' + shape,
+    'Margin:           ' + margin,
+    'Echogenic foci:   ' + foci,
+    '',
+    'SCORE',
+    tr + ' — ' + desc + ' (' + points + ')',
+    '',
+    'RECOMMENDATIONS',
+    mgmt,
+    followup,
+    '',
+    '─'.repeat(48),
+    'Generated using TI-RADS Calculator (ACR TI-RADS 2017)',
+    'For clinical decision support only. Correlate with clinical context.'
+  ].join('\n');
+
+  navigator.clipboard.writeText(report)
+    .then(() => showToast('Report copied to clipboard ✓'))
+    .catch(() => showToast('Copy failed — please copy manually'));
+});
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
 </script>
 </body>
 </html>
